@@ -9,23 +9,15 @@ public class UIManager : MonoBehaviour
     // --------------------------------------------------------------
 
     [SerializeField]
-    Text m_BulletText;
-
-    [SerializeField]
-    Text m_GrenadeText;
+    Text m_KibbleText;
 
     // --------------------------------------------------------------
 
-    public void SetAmmoText(int bulletCount, int grenadeCount)
+    public void SetAmmoText(int kibbleCount)
     {
-        if(m_BulletText)
+        if(m_KibbleText)
         {
-            m_BulletText.text = "Bullets: " + bulletCount;
-        }
-        
-        if(m_GrenadeText)
-        {
-            m_GrenadeText.text = "Grenades: " + grenadeCount;
+            m_KibbleText.text = "Kibbles: " + kibbleCount;
         }
     }
 }

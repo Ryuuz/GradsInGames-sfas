@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class GunLogic : MonoBehaviour
 {
-    // The Bullet Prefab
+    // The Kibble Prefab
     [SerializeField]
-    GameObject m_BulletPrefab;
-
-    // The Explosive Bullet Prefab
-    [SerializeField]
-    GameObject m_ExplosiveBulletPrefab;
+    GameObject m_KibblePrefab;
 
     // The Bullet Spawn Point
     [SerializeField]
-    Transform m_BulletSpawnPoint;
+    Transform m_KibbleSpawnPoint;
 
-    // The Bullet Spawn Point
+    // The Kibble Spawn Point
     [SerializeField]
     float m_ShotCooldown = 0.5f;
 
@@ -34,19 +30,13 @@ public class GunLogic : MonoBehaviour
 
     // SFX
     [SerializeField]
-    AudioClip m_BulletShot;
-
-    [SerializeField]
-    AudioClip m_GrenadeLaunched;
+    AudioClip m_KibbleShot;
 
     // The AudioSource to play Sounds for this object
     AudioSource m_AudioSource;
 
     [SerializeField]
-    int m_BulletAmmo = 100;
-
-    [SerializeField]
-    int m_GrenadeAmmo = 5;
+    int m_KibbleAmmo = 100;
 
     UIManager m_UIManager;
 
@@ -59,7 +49,7 @@ public class GunLogic : MonoBehaviour
         // Update UI
         if (m_UIManager)
         {
-            m_UIManager.SetAmmoText(m_BulletAmmo, m_GrenadeAmmo);
+            m_UIManager.SetAmmoText(m_KibbleAmmo);
         }
     }
 	
@@ -77,14 +67,9 @@ public class GunLogic : MonoBehaviour
 
         if (m_CanShoot)
         {
-            if(Input.GetButtonDown("Fire1") && m_BulletAmmo > 0)
+            if(Input.GetButtonDown("Fire1") && m_KibbleAmmo > 0)
             {
                 Fire();
-                m_CanShoot = false;
-            }
-            else if (Input.GetButtonDown("Fire2") && m_GrenadeAmmo > 0)
-            {
-                FireGrenade();
                 m_CanShoot = false;
             }
         }
@@ -92,54 +77,27 @@ public class GunLogic : MonoBehaviour
 
     void Fire()
     {
-        if(m_BulletPrefab)
+        if(m_KibblePrefab)
         {
             // Reduce the Ammo count
-            --m_BulletAmmo;
+            --m_KibbleAmmo;
 
             // Create the Projectile from the Bullet Prefab
-            Instantiate(m_BulletPrefab, m_BulletSpawnPoint.position, transform.rotation * m_BulletPrefab.transform.rotation);
+            Instantiate(m_KibblePrefab, m_KibbleSpawnPoint.position, transform.rotation * m_KibblePrefab.transform.rotation);
 
             // Play Particle Effects
             PlayGunVFX();
 
             // Play Sound effect
-            if(m_AudioSource && m_BulletShot)
+            if(m_AudioSource && m_KibbleShot)
             {
-                m_AudioSource.PlayOneShot(m_BulletShot);
+                m_AudioSource.PlayOneShot(m_KibbleShot);
             }
 
             // Update UI
             if(m_UIManager)
             {
-                m_UIManager.SetAmmoText(m_BulletAmmo, m_GrenadeAmmo);
-            }
-        }
-    }
-
-    void FireGrenade()
-    {
-        if(m_ExplosiveBulletPrefab)
-        {
-            // Reduce the Ammo count
-            --m_GrenadeAmmo;
-
-            // Create the Projectile from the Explosive Bullet Prefab
-            Instantiate(m_ExplosiveBulletPrefab, m_BulletSpawnPoint.position, transform.rotation * m_ExplosiveBulletPrefab.transform.rotation);
-
-            // Play Particle Effects
-            PlayGunVFX();
-
-            // Play Sound effect
-            if (m_AudioSource && m_GrenadeLaunched)
-            {
-                m_AudioSource.PlayOneShot(m_GrenadeLaunched);
-            }
-
-            // Update UI
-            if(m_UIManager)
-            {
-                m_UIManager.SetAmmoText(m_BulletAmmo, m_GrenadeAmmo);
+                m_UIManager.SetAmmoText(m_KibbleAmmo);
             }
         }
     }
@@ -159,18 +117,6 @@ public class GunLogic : MonoBehaviour
         if (m_Smoke)
         {
             m_Smoke.Play();
-        }
-    }
-
-    public void AddAmmo(int bullets, int grenades)
-    {
-        m_BulletAmmo += bullets;
-        m_GrenadeAmmo += grenades;
-
-        // Update UI
-        if (m_UIManager)
-        {
-            m_UIManager.SetAmmoText(m_BulletAmmo, m_GrenadeAmmo);
         }
     }
 }
