@@ -38,16 +38,6 @@ public class PlayerController : MonoBehaviour
     // The current movement offset
     Vector3 m_CurrentMovementOffset = Vector3.zero;
 
-    // The starting position of the player
-    Vector3 m_SpawningPosition = Vector3.zero;
-
-    // Whether the player is alive or not
-    bool m_IsAlive = true;
-
-    // The time it takes to respawn
-    const float MAX_RESPAWN_TIME = 1.0f;
-    float m_RespawnTime = MAX_RESPAWN_TIME;
-
     // The force added to the player (used for knockbacks)
     Vector3 m_Force = Vector3.zero;
 
@@ -61,7 +51,7 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        m_SpawningPosition = transform.position;
+
     }
 
     void Jump()
@@ -101,13 +91,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
-        if(!m_IsAlive)
-        {
-            UpdateRespawnTime();
-            return;
-        }
-
         // Update movement input
         UpdateMovementState();
 
@@ -149,28 +132,6 @@ public class PlayerController : MonoBehaviour
 
         float angle = Mathf.Atan2(directionInScreenSpace.y, directionInScreenSpace.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
-    }
-
-    public void Die()
-    {
-        m_IsAlive = false;
-        m_RespawnTime = MAX_RESPAWN_TIME;
-    }
-
-    void UpdateRespawnTime()
-    {
-        m_RespawnTime -= Time.deltaTime;
-        if (m_RespawnTime < 0.0f)
-        {
-            Respawn();
-        }
-    }
-
-    void Respawn()
-    {
-        m_IsAlive = true;
-        transform.position = m_SpawningPosition;
-        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
     }
 
     public void AddForce(Vector3 force)

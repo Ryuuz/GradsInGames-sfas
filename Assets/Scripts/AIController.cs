@@ -32,12 +32,6 @@ public class AIController : MonoBehaviour
     // The current movement offset
     Vector3 m_CurrentMovementOffset = Vector3.zero;
 
-    // Whether the player is alive or not
-    bool m_IsAlive = true;
-
-    PlayerController m_PlayerController;
-    Transform m_PlayerTransform;
-
     // --------------------------------------------------------------
 
     void Awake()
@@ -48,13 +42,6 @@ public class AIController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        // Get Player information
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if(player)
-        {
-            m_PlayerController = player.GetComponent<PlayerController>();
-            m_PlayerTransform = player.transform;
-        }
         
     }
 
@@ -71,30 +58,6 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
-        if (!m_IsAlive)
-        {
-            return;
-        }
-
-        float distance = Vector3.Distance(m_PlayerTransform.position, transform.position);
-
-        // Aggro range
-        if (distance < 15.0f)
-        {
-            m_MovementDirection = m_PlayerTransform.position - transform.position;
-            m_MovementDirection.Normalize();
-        }
-
-        // Attack range
-        if(distance < 2.0f)
-        {
-            // Knock back player
-            m_PlayerController.AddForce((m_MovementDirection + new Vector3(0,2,0)) * 20.0f);
-        }
-
-        Debug.Log(distance);
-
         // Update jumping input and apply gravity
         ApplyGravity();
 
@@ -123,10 +86,5 @@ public class AIController : MonoBehaviour
         {
             transform.rotation = lookRotation;
         }
-    }
-
-    public void Die()
-    {
-        m_IsAlive = false;
     }
 }

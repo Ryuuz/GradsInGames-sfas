@@ -13,7 +13,6 @@ public class BulletLogic : MonoBehaviour
     {
         // Add velocity to the bullet
         GetComponent<Rigidbody>().velocity = -transform.up * m_BulletSpeed;
-        //GetComponent<Rigidbody>().AddForce(new Vector3(1.0f, 0.0f, 0.0f));
     }
 
     // Update is called once per frame
@@ -21,12 +20,4 @@ public class BulletLogic : MonoBehaviour
     {
 
     }
-
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.tag == "Ground")
-        {
-
-        }
-    }*/
 }
