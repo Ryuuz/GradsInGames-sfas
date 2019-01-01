@@ -9,64 +9,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float m_RunSpeed = 5.0f;
 
-    // The gravity strength
-    [SerializeField]
-    float m_Gravity = 60.0f;
-
-    // The maximum speed the character can fall
-    [SerializeField]
-    float m_MaxFallSpeed = 20.0f;
-
-    // The character's jump height
-    [SerializeField]
-    float m_JumpHeight = 4.0f;
-
-    // --------------------------------------------------------------
-
-    // The charactercontroller of the player
-    CharacterController m_CharacterController;
-
-    // The current movement direction in x & z.
-    Vector3 m_MovementDirection = Vector3.zero;
-
-    // The current movement speed
-    float m_MovementSpeed = 0.0f;
-
-    // The current vertical / falling speed
-    float m_VerticalSpeed = 0.0f;
-
-    // The current movement offset
-    Vector3 m_CurrentMovementOffset = Vector3.zero;
-
-    // The force added to the player (used for knockbacks)
-    Vector3 m_Force = Vector3.zero;
+    MovementController m_MovementController;
 
     // --------------------------------------------------------------
 
     void Awake()
     {
-        m_CharacterController = GetComponent<CharacterController>();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    void Jump()
-    {
-        m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_Gravity);
-    }
-
-    void ApplyGravity()
-    {
-        // Apply gravity
-        m_VerticalSpeed -= m_Gravity * Time.deltaTime;
-
-        // Make sure we don't fall any faster than m_MaxFallSpeed.
-        m_VerticalSpeed = Mathf.Max(m_VerticalSpeed, -m_MaxFallSpeed);
-        m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
+        m_MovementController = GetComponent<MovementController>();
     }
 
     void UpdateMovementState()
@@ -75,16 +24,16 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
         float verticalInput = Input.GetAxisRaw("Vertical_P1");
 
-        m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        m_MovementSpeed = m_RunSpeed;
+        m_MovementController.SetDirection(new Vector3(horizontalInput, 0, verticalInput));
+        m_MovementController.SetHorizontalSpeed(m_RunSpeed);
     }
 
     void UpdateJumpState()
     {
         // Character can jump when standing on the ground
-        if (Input.GetButtonDown("Jump_P1") && m_CharacterController.isGrounded)
+        if (Input.GetButtonDown("Jump_P1"))
         {
-            Jump();
+            m_MovementController.Jump();
         }
     }
 
@@ -94,34 +43,11 @@ public class PlayerController : MonoBehaviour
         // Update movement input
         UpdateMovementState();
 
-        // Update jumping input and apply gravity
+        // Update jumping input
         UpdateJumpState();
-        ApplyGravity();
-
-        // Calculate actual motion
-        m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + m_Force  + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
-
-        m_Force *= 0.95f;
-
-        // Move character
-        m_CharacterController.Move(m_CurrentMovementOffset);
 
         // Rotate the character towards the mouse cursor
         RotateCharacterTowardsMouseCursor();
-    }
-
-    float AngleBetweenTwoPoints(Vector3 a, Vector3 b)
-    {
-        return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
-    }
-
-    void RotateCharacter(Vector3 movementDirection)
-    {
-        Quaternion lookRotation = Quaternion.LookRotation(movementDirection);
-        if (transform.rotation != lookRotation)
-        {
-            transform.rotation = lookRotation;
-        }
     }
 
     void RotateCharacterTowardsMouseCursor()
@@ -132,10 +58,5 @@ public class PlayerController : MonoBehaviour
 
         float angle = Mathf.Atan2(directionInScreenSpace.y, directionInScreenSpace.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
-    }
-
-    public void AddForce(Vector3 force)
-    {
-        m_Force += force;
     }
 }
