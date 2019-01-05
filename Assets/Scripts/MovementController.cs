@@ -26,9 +26,8 @@ public class MovementController : MonoBehaviour {
     // The current movement direction in x & z.
     Vector3 m_MovementDirection = Vector3.zero;
 
-    // The character's movement speed
-    [SerializeField]
-    float m_MovementSpeed = 4.0f;
+    // The character's movement speed at a given time
+    private float m_MovementSpeed = 0.0f;
 
     // The current vertical / falling speed
     float m_VerticalSpeed = 0.0f;
@@ -48,7 +47,7 @@ public class MovementController : MonoBehaviour {
         // Apply gravity
         m_VerticalSpeed -= m_Gravity * Time.deltaTime;
 
-        // Make sure we don't fall any faster than m_MaxFallSpeed.
+        // Make sure the character doesn't fall any faster than m_MaxFallSpeed.
         m_VerticalSpeed = Mathf.Max(m_VerticalSpeed, -m_MaxFallSpeed);
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
     }
@@ -71,6 +70,7 @@ public class MovementController : MonoBehaviour {
         return Mathf.Atan2(a.y - b.y, a.x - b.x) * Mathf.Rad2Deg;
     }
 
+    // Rotate character to face the direction it is moving in
     public void RotateCharacter()
     {
         Quaternion lookRotation = Quaternion.LookRotation(m_MovementDirection);
@@ -80,6 +80,7 @@ public class MovementController : MonoBehaviour {
         }
     }
 
+    // Make the character jump if grounded
     public void Jump()
     {
         if(m_CharacterController.isGrounded)
@@ -88,11 +89,13 @@ public class MovementController : MonoBehaviour {
         }
     }
 
+    // Set the movement speed of the character
     public void SetHorizontalSpeed(float hSpeed)
     {
         m_MovementSpeed = hSpeed;
     }
 
+    // Set direction the character should move in
     public void SetDirection(Vector3 direction)
     {
         m_MovementDirection = direction;

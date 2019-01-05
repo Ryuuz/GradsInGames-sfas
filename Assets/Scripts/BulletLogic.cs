@@ -8,6 +8,9 @@ public class BulletLogic : MonoBehaviour
     [SerializeField]
     protected float m_BulletSpeed = 15.0f;
 
+    private bool m_BeingEaten = false;
+    private bool m_HasLanded = false;
+
     // Use this for initialization
     void Start()
     {
@@ -18,6 +21,34 @@ public class BulletLogic : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+        if(!m_HasLanded)
+        {
+            Landed();
+        }
+    }
 
+    // Checks if the kibble has stopped moving
+    void Landed()
+    {
+        if(GetComponent<Rigidbody>().velocity.magnitude == 0.0f)
+        {
+            m_HasLanded = true;
+        }
+    }
+
+    public bool GetIfLanded()
+    {
+        return m_HasLanded;
+    }
+
+    // Should be called when a cat starts eating the kibble
+    public void SetEating()
+    {
+        m_BeingEaten = true;
+    }
+
+    public bool GetBeingEaten()
+    {
+        return m_BeingEaten;
     }
 }
