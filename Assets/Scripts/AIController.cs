@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AIController : MonoBehaviour
 {
 
     // --------------------------------------------------------------
 
-    // The charactercontroller of the player
-    MovementController m_MovementController;
+    NavMeshAgent m_Agent;
 
     // List of all the treats the cat has noticed
     List<GameObject> m_Treats = new List<GameObject>();
@@ -20,7 +20,7 @@ public class AIController : MonoBehaviour
 
     void Awake()
     {
-        m_MovementController = GetComponent<MovementController>();
+        m_Agent = GetComponent<NavMeshAgent>();
     }
 
     // Update is called once per frame
@@ -34,13 +34,6 @@ public class AIController : MonoBehaviour
             SetCurrentTreat();
             DistanceToKibble();
         }
-        else
-        {
-            m_MovementController.SetHorizontalSpeed(0.0f);
-        }
-
-        FindDirection();
-        m_MovementController.RotateCharacter();
     }
 
     // If a kibble is within the trigger sphere, the cat will notice it
@@ -75,23 +68,22 @@ public class AIController : MonoBehaviour
     {
         if (m_CurrentTreat)
         {
-            float speed = 4.0f;
-
             // If close enough to stop and eat the kibble
-            if (Vector3.Distance(m_CurrentTreat.transform.position, gameObject.transform.position) <= 1.0f)
+            if (Vector3.Distance(m_CurrentTreat.transform.position, gameObject.transform.position) <= 0.6f)
             {
-                speed = 0.0f;
                 BulletLogic aKibble = m_CurrentTreat.GetComponent<BulletLogic>();
 
-                if(!aKibble.GetBeingEaten() && aKibble.GetIfLanded())
+                if (!aKibble.GetBeingEaten() && aKibble.GetIfLanded())
                 {
                     // Makes it unavailable for other cats and starts eating it
                     aKibble.SetEating();
                     StartCoroutine(EatKibble());
                 }
             }
-
-            m_MovementController.SetHorizontalSpeed(speed);
+            else
+            {
+                ChaseTreat();
+            }
         }
     }
 
@@ -101,10 +93,18 @@ public class AIController : MonoBehaviour
         Destroy(m_CurrentTreat);
     }
 
+    void ChaseTreat()
+    {
+        Vector3 destination = m_CurrentTreat.transform.position - transform.position;
+        destination = destination.normalized * 0.5f;
+
+        m_Agent.SetDestination(m_CurrentTreat.transform.position - destination);
+    }
+
     // Decides on what kibble the cat should go for
     void SetCurrentTreat()
     {
-        if(!m_CurrentTreat) //-------Make it possible for the cat to change its mind
+        if(!m_CurrentTreat)
         {
             //Finds the closest kibble
             float minDistance = 1000.0f;
@@ -124,21 +124,6 @@ public class AIController : MonoBehaviour
 
             m_CurrentTreat = closest;
         }
-    }
-
-    // The direction the cat should walk in
-    void FindDirection()
-    {
-        Vector3 direction = gameObject.transform.forward;
-
-        if (m_CurrentTreat)
-        {
-            direction = m_CurrentTreat.transform.position - gameObject.transform.position;
-            direction.y = 0.0f;
-            direction.Normalize();
-        }
-
-        m_MovementController.SetDirection(direction);
     }
 
     //Clean up the list of kibbles by removing eaten ones
