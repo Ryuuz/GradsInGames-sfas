@@ -2,11 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum KibbleType
+{
+    oval, star, fish, triangle
+}
+
 public class BulletLogic : MonoBehaviour
 {
     // The speed of the bullet
     [SerializeField]
     protected float m_BulletSpeed = 15.0f;
+
+    public KibbleType m_KibbleType;
 
     private bool m_BeingEaten = false;
     private bool m_HasLanded = false;

@@ -11,12 +11,6 @@ public class CameraFollow : MonoBehaviour
     // The Z Distance from the Camera Target
     [SerializeField]
     float m_CameraDistanceZ = 8.0f;
-
-    // Use this for initialization
-    void Start ()
-    {
-		
-	}
 	
 	// Update is called once per frame
 	void Update ()
