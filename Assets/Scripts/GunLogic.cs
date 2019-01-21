@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct KibbleAmmo
+{
+    public GameObject kibblePrefab;
+    public int kibbleAmount;
+}
+
 public class GunLogic : MonoBehaviour
 {
-    // The Kibble Prefabs
     [SerializeField]
-    GameObject m_StandardKibble;
-    [SerializeField]
-    GameObject m_StarKibble;
-    [SerializeField]
-    GameObject m_FishKibble;
-    [SerializeField]
-    GameObject m_TriangleKibble;
+    public KibbleAmmo[] m_Kibbles = new KibbleAmmo[4];
+
+    bool m_CanShoot = true;
+    int m_CurrentKibble;
 
     // The Bullet Spawn Point
     [SerializeField]
@@ -21,9 +24,6 @@ public class GunLogic : MonoBehaviour
     // The Kibble Spawn Point
     [SerializeField]
     float m_ShotCooldown = 0.5f;
-
-    bool m_CanShoot = true;
-    GameObject m_CurrentKibble;
 
     // VFX
     [SerializeField]
@@ -41,13 +41,6 @@ public class GunLogic : MonoBehaviour
 
     // The AudioSource to play Sounds for this object
     AudioSource m_AudioSource;
-
-    [SerializeField]
-    int m_StandardKibbleAmmo = 100;
-    int m_StarKibbleAmmo = 100;
-    int m_FishKibbleAmmo = 100;
-    int m_TriangleKibbleAmmo = 100;
-
     UIManager m_UIManager;
 
     // Use this for initialization
@@ -55,19 +48,47 @@ public class GunLogic : MonoBehaviour
     {
         m_AudioSource = GetComponent<AudioSource>();
         m_UIManager = FindObjectOfType<UIManager>();
+        m_CurrentKibble = 0;
 
         // Update UI
         if (m_UIManager)
         {
-            m_UIManager.SetAmmoText(m_StandardKibbleAmmo);
-        }
+            for(int i = 0; i < 4; i++)
+            {
+                m_UIManager.SetAmmoText(m_Kibbles[i].kibbleAmount, i);
+            }
 
-        m_CurrentKibble = m_StandardKibble;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
+        }
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if(Input.GetButtonDown("Ammo1") && m_Kibbles[0].kibbleAmount > 0)
+        {
+            m_CurrentKibble = 0;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
+        }
+
+        if (Input.GetButtonDown("Ammo2") && m_Kibbles[1].kibbleAmount > 0)
+        {
+            m_CurrentKibble = 1;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
+        }
+
+        if (Input.GetButtonDown("Ammo3") && m_Kibbles[2].kibbleAmount > 0)
+        {
+            m_CurrentKibble = 2;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
+        }
+
+        if (Input.GetButtonDown("Ammo4") && m_Kibbles[3].kibbleAmount > 0)
+        {
+            m_CurrentKibble = 3;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
+        }
+
         if (!m_CanShoot)
         {
             m_ShotCooldown -= Time.deltaTime;
@@ -79,7 +100,7 @@ public class GunLogic : MonoBehaviour
 
         if (m_CanShoot)
         {
-            if(Input.GetButtonDown("Fire1") && m_StandardKibbleAmmo > 0)
+            if(Input.GetButtonDown("Fire1") && m_Kibbles[m_CurrentKibble].kibbleAmount > 0)
             {
                 Fire();
                 m_CanShoot = false;
@@ -89,13 +110,13 @@ public class GunLogic : MonoBehaviour
 
     void Fire()
     {
-        if(m_StandardKibble)
+        if(m_Kibbles[m_CurrentKibble].kibblePrefab)
         {
             // Reduce the Ammo count
-            --m_StandardKibbleAmmo;
+            --m_Kibbles[m_CurrentKibble].kibbleAmount;
 
             // Create the Projectile from the Bullet Prefab
-            Instantiate(m_CurrentKibble, m_KibbleSpawnPoint.position, transform.rotation * m_CurrentKibble.transform.rotation);
+            Instantiate(m_Kibbles[m_CurrentKibble].kibblePrefab, m_KibbleSpawnPoint.position, transform.rotation * m_Kibbles[m_CurrentKibble].kibblePrefab.transform.rotation);
 
             // Play Particle Effects
             PlayGunVFX();
@@ -109,7 +130,7 @@ public class GunLogic : MonoBehaviour
             // Update UI
             if(m_UIManager)
             {
-                m_UIManager.SetAmmoText(m_StandardKibbleAmmo);
+                m_UIManager.SetAmmoText(m_Kibbles[m_CurrentKibble].kibbleAmount, m_CurrentKibble);
             }
         }
     }

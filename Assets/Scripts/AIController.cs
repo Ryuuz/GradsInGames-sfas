@@ -3,24 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum CatType
+{
+    ginger, tabby, black, all
+};
+
 public class AIController : MonoBehaviour
 {
+    [SerializeField]
+    public CatType m_CatType;
 
-    // --------------------------------------------------------------
-
+    KibbleType m_KibbleType;
     NavMeshAgent m_Agent;
-
-    // List of all the treats the cat has noticed
-    List<GameObject> m_Treats = new List<GameObject>();
-
-    // The treat the cat is currently going for
-    GameObject m_CurrentTreat;
-
-    // --------------------------------------------------------------
+    List<GameObject> m_Treats = new List<GameObject>(); // List of all the treats the cat has noticed
+    GameObject m_CurrentTreat; // The treat the cat is currently going for
 
     void Awake()
     {
         m_Agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        switch (m_CatType)
+        {
+            case CatType.black:
+                m_KibbleType = KibbleType.star;
+                break;
+            case CatType.ginger:
+                m_KibbleType = KibbleType.fish;
+                break;
+            case CatType.tabby:
+                m_KibbleType = KibbleType.triangle;
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -41,7 +57,11 @@ public class AIController : MonoBehaviour
     {
         if(other.tag == "Treat")
         {
-            m_Treats.Add(other.gameObject);
+            KibbleType type = other.GetComponent<BulletLogic>().m_KibbleType;
+            if(type == m_KibbleType || type == KibbleType.oval)
+            {
+                m_Treats.Add(other.gameObject);
+            }
         }
     }
 
@@ -103,7 +123,7 @@ public class AIController : MonoBehaviour
 
     // Decides on what kibble the cat should go for
     void SetCurrentTreat()
-    {
+    {   
         if(!m_CurrentTreat)
         {
             //Finds the closest kibble
@@ -115,7 +135,7 @@ public class AIController : MonoBehaviour
             {
                 distance = Vector3.Distance(treat.transform.position, gameObject.transform.position);
 
-                if(distance < minDistance)
+                if(distance < minDistance && !treat.GetComponent<BulletLogic>().GetBeingEaten())
                 {
                     minDistance = distance;
                     closest = treat;
