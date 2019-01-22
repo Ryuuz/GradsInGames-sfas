@@ -152,4 +152,16 @@ public class GunLogic : MonoBehaviour
             m_Smoke.Play();
         }
     }
+
+    public int GetAllAmmo()
+    {
+        int amount = 0;
+
+        for(int i = 0; i < m_Kibbles.Length; i++)
+        {
+            amount += m_Kibbles[i].kibbleAmount;
+        }
+
+        return amount;
+    }
 }
