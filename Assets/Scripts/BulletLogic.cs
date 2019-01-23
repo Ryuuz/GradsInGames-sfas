@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// The different types of kibble
 public enum KibbleType
 {
     oval, star, fish, triangle
@@ -9,16 +8,20 @@ public enum KibbleType
 
 public class BulletLogic : MonoBehaviour
 {
+    [SerializeField]
+    public KibbleType m_KibbleType;
+    
     // The speed of the bullet
     [SerializeField]
     protected float m_BulletSpeed = 15.0f;
 
-    public KibbleType m_KibbleType;
+    // --------------------------------------------------------------
 
     private bool m_BeingEaten = false;
     private bool m_HasLanded = false;
 
-    // Use this for initialization
+    // --------------------------------------------------------------
+
     void Start()
     {
         // Add velocity to the bullet

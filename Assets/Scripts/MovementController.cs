@@ -1,39 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MovementController : MonoBehaviour {
-
-    // --------------------------------------------------------------
-
+public class MovementController : MonoBehaviour
+{
     // The gravity strength
     [SerializeField]
-    float m_Gravity = 60.0f;
+    public float m_Gravity = 60.0f;
 
     // The maximum speed the character can fall
     [SerializeField]
-    float m_MaxFallSpeed = 20.0f;
+    public float m_MaxFallSpeed = 20.0f;
 
     // The character's jump height
     [SerializeField]
-    float m_JumpHeight = 4.0f;
+    public float m_JumpHeight = 4.0f;
 
     // --------------------------------------------------------------
 
     // The charactercontroller of the player
-    CharacterController m_CharacterController;
+    private CharacterController m_CharacterController;
 
     // The current movement direction in x & z.
-    Vector3 m_MovementDirection = Vector3.zero;
+    private Vector3 m_MovementDirection = Vector3.zero;
 
     // The character's movement speed at a given time
     private float m_MovementSpeed = 0.0f;
 
     // The current vertical / falling speed
-    float m_VerticalSpeed = 0.0f;
+    private float m_VerticalSpeed = 0.0f;
 
     // The current movement offset
-    Vector3 m_CurrentMovementOffset = Vector3.zero;
+    private Vector3 m_CurrentMovementOffset = Vector3.zero;
 
     // --------------------------------------------------------------
 
@@ -52,7 +48,6 @@ public class MovementController : MonoBehaviour {
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Update jumping input and apply gravity

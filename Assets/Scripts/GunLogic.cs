@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+// Ammo type and amount
 [System.Serializable]
 public struct KibbleAmmo
 {
@@ -14,36 +13,41 @@ public class GunLogic : MonoBehaviour
     [SerializeField]
     public KibbleAmmo[] m_Kibbles = new KibbleAmmo[4];
 
-    bool m_CanShoot = true;
-    int m_CurrentKibble;
+    // --------------------------------------------------------------
 
     // The Bullet Spawn Point
     [SerializeField]
-    Transform m_KibbleSpawnPoint;
+    private Transform m_KibbleSpawnPoint;
 
     // The Kibble Spawn Point
     [SerializeField]
-    float m_ShotCooldown = 0.5f;
+    private float m_ShotCooldown = 0.5f;
 
     // VFX
     [SerializeField]
-    ParticleSystem m_Flare;
+    private ParticleSystem m_Flare;
 
     [SerializeField]
-    ParticleSystem m_Smoke;
+    private ParticleSystem m_Smoke;
 
     [SerializeField]
-    ParticleSystem m_Sparks;
+    private ParticleSystem m_Sparks;
 
     // SFX
     [SerializeField]
-    AudioClip m_KibbleShot;
+    private AudioClip m_KibbleShot;
+
+    private bool m_CanShoot = true;
+
+    // The type of kibble that is currently active
+    private int m_CurrentKibble;
 
     // The AudioSource to play Sounds for this object
-    AudioSource m_AudioSource;
-    UIManager m_UIManager;
+    private AudioSource m_AudioSource;
+    private UIManager m_UIManager;
 
-    // Use this for initialization
+    // --------------------------------------------------------------
+
     void Start ()
     {
         m_AudioSource = GetComponent<AudioSource>();
@@ -65,30 +69,29 @@ public class GunLogic : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        // Change active kibble type
         if(Input.GetButtonDown("Ammo1") && m_Kibbles[0].kibbleAmount > 0)
         {
             m_CurrentKibble = 0;
             m_UIManager.SetActiveAmmo(m_CurrentKibble);
         }
-
         if (Input.GetButtonDown("Ammo2") && m_Kibbles[1].kibbleAmount > 0)
         {
             m_CurrentKibble = 1;
             m_UIManager.SetActiveAmmo(m_CurrentKibble);
         }
-
         if (Input.GetButtonDown("Ammo3") && m_Kibbles[2].kibbleAmount > 0)
         {
             m_CurrentKibble = 2;
             m_UIManager.SetActiveAmmo(m_CurrentKibble);
         }
-
         if (Input.GetButtonDown("Ammo4") && m_Kibbles[3].kibbleAmount > 0)
         {
             m_CurrentKibble = 3;
             m_UIManager.SetActiveAmmo(m_CurrentKibble);
         }
 
+        // Update cooldown for shooting
         if (!m_CanShoot)
         {
             m_ShotCooldown -= Time.deltaTime;
@@ -98,6 +101,7 @@ public class GunLogic : MonoBehaviour
             }
         }
 
+        // Shoot if possible
         if (m_CanShoot)
         {
             if(Input.GetButtonDown("Fire1") && m_Kibbles[m_CurrentKibble].kibbleAmount > 0)
@@ -135,6 +139,7 @@ public class GunLogic : MonoBehaviour
         }
     }
 
+    // Play the particle effects for the gun
     void PlayGunVFX()
     {
         if (m_Flare)
@@ -153,6 +158,7 @@ public class GunLogic : MonoBehaviour
         }
     }
 
+    // Returns the total amount of kibbles left
     public int GetAllAmmo()
     {
         int amount = 0;

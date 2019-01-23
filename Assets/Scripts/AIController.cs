@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+// The different types of cats
 public enum CatType
 {
     ginger, tabby, black, all
@@ -10,13 +11,24 @@ public enum CatType
 
 public class AIController : MonoBehaviour
 {
+    //The type of the cat
     [SerializeField]
     public CatType m_CatType;
 
-    KibbleType m_KibbleType;
-    NavMeshAgent m_Agent;
-    List<GameObject> m_Treats = new List<GameObject>(); // List of all the treats the cat has noticed
-    GameObject m_CurrentTreat; // The treat the cat is currently going for
+    // --------------------------------------------------------------
+
+    private NavMeshAgent m_Agent;
+
+    // The special type of kibble the cat likes
+    private KibbleType m_KibbleType;
+
+    // List of all the treats the cat has noticed
+    private List<GameObject> m_Treats = new List<GameObject>();
+
+    // The treat the cat is currently going for
+    private GameObject m_CurrentTreat;
+
+    // --------------------------------------------------------------
 
     void Awake()
     {
@@ -25,6 +37,7 @@ public class AIController : MonoBehaviour
 
     private void Start()
     {
+        // Set preferred kibble based on type of cat
         switch (m_CatType)
         {
             case CatType.black:
@@ -45,7 +58,7 @@ public class AIController : MonoBehaviour
         CleanUpTreats();
 
         // Only do this if the cat has noticed any treats
-        if (m_Treats.Count != 0)
+        if (m_Treats.Count > 0)
         {
             SetCurrentTreat();
             DistanceToKibble();
@@ -113,6 +126,7 @@ public class AIController : MonoBehaviour
         Destroy(m_CurrentTreat);
     }
 
+    // Sets the destination of the NavMesh Agent to within range of the kibble
     void ChaseTreat()
     {
         Vector3 destination = m_CurrentTreat.transform.position - transform.position;
@@ -124,6 +138,13 @@ public class AIController : MonoBehaviour
     // Decides on what kibble the cat should go for
     void SetCurrentTreat()
     {   
+        if(m_CurrentTreat)
+        {
+            if(Vector3.Distance(m_CurrentTreat.transform.position, transform.position) > GetComponent<SphereCollider>().radius)
+            {
+                m_CurrentTreat = null;
+            }
+        }
         if(!m_CurrentTreat)
         {
             //Finds the closest kibble
@@ -144,9 +165,11 @@ public class AIController : MonoBehaviour
 
             m_CurrentTreat = closest;
         }
+
+        ChaseTreat();
     }
 
-    //Clean up the list of kibbles by removing eaten ones
+    // Clean up the list of kibbles by removing eaten ones
     void CleanUpTreats()
     {
         for(int i = 0; i < m_Treats.Count; i++)

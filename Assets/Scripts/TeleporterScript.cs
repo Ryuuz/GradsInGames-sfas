@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class TeleporterScript : MonoBehaviour
@@ -9,8 +7,11 @@ public class TeleporterScript : MonoBehaviour
     public Image m_TeleporterIcon;
     public Sprite[] m_CatIcons = new Sprite[3];
 
+    // --------------------------------------------------------------
+
     private void Start()
     {
+        // Set icon depending on the type of cat the teleporter takes
         switch(m_TypeAccepted)
         {
             case CatType.black: m_TeleporterIcon.sprite = m_CatIcons[0];
@@ -19,7 +20,8 @@ public class TeleporterScript : MonoBehaviour
                 break;
             case CatType.tabby: m_TeleporterIcon.sprite = m_CatIcons[2];
                 break;
-            default: break;
+            default: m_TeleporterIcon.enabled = false;
+                break;
         }
     }
 

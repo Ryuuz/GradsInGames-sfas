@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -11,8 +9,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     public Image[] m_KibbleImage = new Image[4];
 
-    int m_CurrentActive = 0;
+    // --------------------------------------------------------------
 
+    private int m_CurrentActive = 0;
+
+    // --------------------------------------------------------------
+
+        //Update the amount of kibble ammo
     public void SetAmmoText(int kibbleCount, int kibbleType)
     {
         if(m_KibbleText[kibbleType])
@@ -21,6 +24,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Highlight the active kibble type and darken the inactive
     public void SetActiveAmmo(int kibbleType)
     {
             m_KibbleImage[m_CurrentActive].color = Color.black;

@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
-    // --------------------------------------------------------------
-
     // The character's running speed
     [SerializeField]
-    float m_RunSpeed = 5.0f;
+    public float m_RunSpeed = 5.0f;
 
-    MovementController m_MovementController;
+    private MovementController m_MovementController;
 
     // --------------------------------------------------------------
 
@@ -37,7 +34,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Update movement input
@@ -52,10 +48,12 @@ public class PlayerController : MonoBehaviour
 
     void RotateCharacterTowardsMouseCursor()
     {
+        // Find the direction the player should look in
         Vector3 mousePosInScreenSpace = Input.mousePosition;
         Vector3 playerPosInScreenSpace = Camera.main.WorldToScreenPoint(transform.position);
         Vector3 directionInScreenSpace = mousePosInScreenSpace - playerPosInScreenSpace;
 
+        // Rotate the angle between new and old direction
         float angle = Mathf.Atan2(directionInScreenSpace.y, directionInScreenSpace.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(-angle + 90.0f, Vector3.up);
     }
