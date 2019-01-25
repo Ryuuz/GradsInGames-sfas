@@ -3,15 +3,12 @@
 public class MovementController : MonoBehaviour
 {
     // The gravity strength
-    [SerializeField]
     public float m_Gravity = 60.0f;
 
     // The maximum speed the character can fall
-    [SerializeField]
     public float m_MaxFallSpeed = 20.0f;
 
     // The character's jump height
-    [SerializeField]
     public float m_JumpHeight = 4.0f;
 
     // --------------------------------------------------------------

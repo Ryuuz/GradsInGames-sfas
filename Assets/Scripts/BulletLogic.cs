@@ -8,12 +8,8 @@ public enum KibbleType
 
 public class BulletLogic : MonoBehaviour
 {
-    [SerializeField]
     public KibbleType m_KibbleType;
-    
-    // The speed of the bullet
-    [SerializeField]
-    protected float m_BulletSpeed = 15.0f;
+    public float m_BulletSpeed = 15.0f;
 
     // --------------------------------------------------------------
 

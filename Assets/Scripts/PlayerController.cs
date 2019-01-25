@@ -3,8 +3,9 @@
 public class PlayerController : MonoBehaviour
 {
     // The character's running speed
-    [SerializeField]
     public float m_RunSpeed = 5.0f;
+
+    // --------------------------------------------------------------
 
     private MovementController m_MovementController;
 

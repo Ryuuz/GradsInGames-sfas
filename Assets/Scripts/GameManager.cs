@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
             m_Message.text = m_Won;
         }
         // Else if the player runs out of ammo the game is lost
-        else if(m_Gun.GetComponent<GunLogic>().GetAllAmmo() <= 0)
+        else if(m_Gun.GetComponent<GunLogic>().GetAllAmmo() == 0)
         {
             m_Menu.SetActive(true);
             m_NextButton.SetActive(false);

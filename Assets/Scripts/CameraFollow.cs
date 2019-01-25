@@ -3,12 +3,10 @@
 public class CameraFollow : MonoBehaviour
 {
     // The Camera Target
-    [SerializeField]
     public Transform m_PlayerTransform;
 
     // The Z Distance from the Camera Target
-    [SerializeField]
-    public float m_CameraDistanceZ = 8.0f;
+    public float m_CameraDistanceZ = 10.0f;
 
     // --------------------------------------------------------------
 

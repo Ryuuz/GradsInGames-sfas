@@ -3,10 +3,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField]
     public Text[] m_KibbleText = new Text[4];
-
-    [SerializeField]
     public Image[] m_KibbleImage = new Image[4];
 
     // --------------------------------------------------------------

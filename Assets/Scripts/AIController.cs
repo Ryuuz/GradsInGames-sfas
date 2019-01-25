@@ -12,7 +12,6 @@ public enum CatType
 public class AIController : MonoBehaviour
 {
     //The type of the cat
-    [SerializeField]
     public CatType m_CatType;
 
     // --------------------------------------------------------------

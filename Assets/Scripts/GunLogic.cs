@@ -10,18 +10,13 @@ public struct KibbleAmmo
 
 public class GunLogic : MonoBehaviour
 {
-    [SerializeField]
     public KibbleAmmo[] m_Kibbles = new KibbleAmmo[4];
 
     // --------------------------------------------------------------
 
-    // The Bullet Spawn Point
+    // The kibble Spawn Point
     [SerializeField]
     private Transform m_KibbleSpawnPoint;
-
-    // The Kibble Spawn Point
-    [SerializeField]
-    private float m_ShotCooldown = 0.5f;
 
     // VFX
     [SerializeField]
@@ -38,6 +33,7 @@ public class GunLogic : MonoBehaviour
     private AudioClip m_KibbleShot;
 
     private bool m_CanShoot = true;
+    private float m_ShotCooldown = 0.5f;
 
     // The type of kibble that is currently active
     private int m_CurrentKibble;
