@@ -44,14 +44,23 @@ public class GunLogic : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    void Start ()
+    void Start()
     {
         m_AudioSource = GetComponent<AudioSource>();
         m_UIManager = FindObjectOfType<UIManager>();
-        m_CurrentKibble = 0;
+
+        // Set the current kibble to the first one the player has any of
+        for(int i = 0; i < m_Kibbles.Length; i++)
+        {
+            if(m_Kibbles[i].kibbleAmount > 0)
+            {
+                m_CurrentKibble = i;
+                i = m_Kibbles.Length;
+            }
+        }
 
         // Update UI
-        if (m_UIManager)
+        if(m_UIManager)
         {
             for(int i = 0; i < 4; i++)
             {
@@ -63,48 +72,39 @@ public class GunLogic : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
     {
-        // Change active kibble type
-        if(Input.GetButtonDown("Ammo1") && m_Kibbles[0].kibbleAmount > 0)
-        {
-            m_CurrentKibble = 0;
-            m_UIManager.SetActiveAmmo(m_CurrentKibble);
-        }
-        if (Input.GetButtonDown("Ammo2") && m_Kibbles[1].kibbleAmount > 0)
-        {
-            m_CurrentKibble = 1;
-            m_UIManager.SetActiveAmmo(m_CurrentKibble);
-        }
-        if (Input.GetButtonDown("Ammo3") && m_Kibbles[2].kibbleAmount > 0)
-        {
-            m_CurrentKibble = 2;
-            m_UIManager.SetActiveAmmo(m_CurrentKibble);
-        }
-        if (Input.GetButtonDown("Ammo4") && m_Kibbles[3].kibbleAmount > 0)
-        {
-            m_CurrentKibble = 3;
-            m_UIManager.SetActiveAmmo(m_CurrentKibble);
-        }
-
         // Update cooldown for shooting
-        if (!m_CanShoot)
+        if(!m_CanShoot)
         {
             m_ShotCooldown -= Time.deltaTime;
-            if (m_ShotCooldown < 0.0f)
+            if(m_ShotCooldown < 0.0f)
             {
                 m_CanShoot = true;
             }
         }
+    }
 
+    public void ShootKibble()
+    {
         // Shoot if possible
-        if (m_CanShoot)
+        if(m_CanShoot)
         {
-            if(Input.GetButtonDown("Fire1") && m_Kibbles[m_CurrentKibble].kibbleAmount > 0)
+            if(m_Kibbles[m_CurrentKibble].kibbleAmount > 0)
             {
                 Fire();
                 m_CanShoot = false;
             }
+        }
+    }
+
+    public void ChangeKibble(int kibbleNumber)
+    {
+        // Change active kibble type
+        if( m_Kibbles[kibbleNumber].kibbleAmount > 0)
+        {
+            m_CurrentKibble = kibbleNumber;
+            m_UIManager.SetActiveAmmo(m_CurrentKibble);
         }
     }
 

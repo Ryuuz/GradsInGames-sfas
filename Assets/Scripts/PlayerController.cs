@@ -16,38 +16,20 @@ public class PlayerController : MonoBehaviour
         m_MovementController = GetComponent<MovementController>();
     }
 
-    void UpdateMovementState()
+    public void UpdateMovementState(Vector3 playerInput)
     {
-        // Get Player's movement input and determine direction and set run speed
-        float horizontalInput = Input.GetAxisRaw("Horizontal_P1");
-        float verticalInput = Input.GetAxisRaw("Vertical_P1");
-
-        m_MovementController.SetDirection(new Vector3(horizontalInput, 0, verticalInput));
+        // Determine direction and set run speed
+        m_MovementController.SetDirection(playerInput);
         m_MovementController.SetHorizontalSpeed(m_RunSpeed);
     }
 
-    void UpdateJumpState()
+    public void UpdateJumpState()
     {
         // Character can jump when standing on the ground
-        if (Input.GetButtonDown("Jump_P1"))
-        {
-            m_MovementController.Jump();
-        }
+        m_MovementController.Jump();
     }
 
-    void Update()
-    {
-        // Update movement input
-        UpdateMovementState();
-
-        // Update jumping input
-        UpdateJumpState();
-
-        // Rotate the character towards the mouse cursor
-        RotateCharacterTowardsMouseCursor();
-    }
-
-    void RotateCharacterTowardsMouseCursor()
+    public void RotateCharacterTowardsMouseCursor()
     {
         // Find the direction the player should look in
         Vector3 mousePosInScreenSpace = Input.mousePosition;

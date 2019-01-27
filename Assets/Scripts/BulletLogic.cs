@@ -9,7 +9,7 @@ public enum KibbleType
 public class BulletLogic : MonoBehaviour
 {
     public KibbleType m_KibbleType;
-    public float m_BulletSpeed = 15.0f;
+    public float m_BulletSpeed = 10.0f;
 
     // --------------------------------------------------------------
 
